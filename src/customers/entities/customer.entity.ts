@@ -26,6 +26,12 @@ export class Customer {
   @Column({ name: 'is_active', default: true })
   isActive: boolean;
 
+  @Column({name: 'lender_group',  nullable: true})
+  lenderGroup: string;
+
+  @Column({name: 'borrower_group',  nullable: true})
+  borrowerGroup: string;
+
   // ======================
   // PERSONAL INFORMATION
   // ======================

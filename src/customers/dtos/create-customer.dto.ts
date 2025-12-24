@@ -39,6 +39,14 @@ export class CreateCustomerDto {
   @IsBoolean()
   isLender: boolean;
 
+  @IsOptional()
+  @IsString()
+  lenderGroup: string;
+
+  @IsOptional()
+  @IsString()
+  borrowerGroup: string;
+
   // ======================
   // Personal Information
   // ======================

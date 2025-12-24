@@ -53,21 +53,25 @@ export class CustomersService {
       );
     }
 
-    const customer = this.customerRepository.create({
+    const customerData: Partial<Customer> = {
       ...dto,
-      company,
+      company: company,
       isActive: true,
+      panCardPath: files?.panCard?.[0]?.path,
+      aadharPath: files?.aadhar?.[0]?.path,
+      companyPanPath: files?.companyPan?.[0]?.path,
+      visitingCardPath: files?.visitingCard?.[0]?.path,
+    };
 
-      panCardPath: files.panCard?.[0]?.path,
-      aadharPath: files.aadhar?.[0]?.path,
-      companyPanPath: files.companyPan?.[0]?.path,
-      visitingCardPath: files.visitingCard?.[0]?.path,
-    });
+    const customer = this.customerRepository.create(customerData);
 
-    return this.customerRepository.save(customer);
+    // 3. Save and return
+    return await this.customerRepository.save(customer);
   }
 
   async findAll(): Promise<Customer[]> {
-    return this.customerRepository.find();
+    return this.customerRepository.find({
+      relations: ['company'],
+    });
   }
 }
