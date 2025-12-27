@@ -17,12 +17,13 @@ import { CustomersModule } from './customers/customers.module';
 
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: process.env.DB_HOST,
-      port: Number(process.env.DB_PORT),
-      username: process.env.DB_USER,
-      password: process.env.DB_PASS,
-      database: process.env.DB_NAME,
+      host: '127.0.0.1',
+      port: 3306,
+      username: 'mksk_user',
+      password: 'StrongPassword123!',
+      database: 'mksk',
       autoLoadEntities: true,    
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: false,         
     }),
 

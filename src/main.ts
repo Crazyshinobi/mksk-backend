@@ -10,7 +10,14 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-  app.enableCors();
+  app.enableCors({
+    origin: [
+      'http://88.222.241.87',
+	'https://88.222.241.87'      // Replace with your actual VPS IP
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,           // Required if you use cookies or Authorization headers
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
