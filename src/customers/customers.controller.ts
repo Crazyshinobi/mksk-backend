@@ -1,7 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
+  ParseIntPipe,
+  Patch,
   Post,
   UploadedFiles,
   UseGuards,
@@ -49,5 +53,24 @@ export class CustomersController {
     },
   ) {
     return this.customersService.createCustomer(dto, files);
+  }
+
+  @Patch(':id/status')
+  @ResponseMessage('Customer status toggled')
+  async toggleCustomerStatus(@Param('id', ParseIntPipe) id: number) {
+    return this.customersService.toggleStatus(id);
+  }
+
+  @Patch(':id/update-status')
+  async updateStatus(
+    @Param('id', ParseIntPipe) id: number,
+    @Body('isActive') isActive: boolean,
+  ) {
+    return this.customersService.updateStatus(id, isActive);
+  }
+
+  @Delete(':id')
+  async deleteCustomer(@Param('id', ParseIntPipe) id: number) {
+    return this.customersService.remove(id);
   }
 }

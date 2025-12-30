@@ -9,6 +9,9 @@ import { Repository } from 'typeorm';
 import { Customer } from './entities/customer.entity';
 import { CreateCustomerDto } from './dtos/create-customer.dto';
 import { Company } from '../companies/entities/company.entity';
+import { unlink } from 'fs/promises';
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 @Injectable()
 export class CustomersService {
@@ -73,5 +76,67 @@ export class CustomersService {
     return this.customerRepository.find({
       relations: ['company'],
     });
+  }
+
+  async toggleStatus(id: number): Promise<Customer> {
+    const customer = await this.customerRepository.findOne({ where: { id } });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    customer.isActive = !customer.isActive;
+
+    return await this.customerRepository.save(customer);
+  }
+
+  async updateStatus(id: number, status: boolean): Promise<Customer> {
+    const customer = await this.customerRepository.findOne({ where: { id } });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    customer.isActive = status;
+    return await this.customerRepository.save(customer);
+  }
+
+  async remove(id: number): Promise<{ message: string }> {
+    const customer = await this.customerRepository.findOne({ where: { id } });
+
+    if (!customer) {
+      throw new NotFoundException(`Customer with ID ${id} not found`);
+    }
+
+    const filePaths = [
+      customer.panCardPath,
+      customer.aadharPath,
+      customer.companyPanPath,
+      customer.visitingCardPath,
+    ];
+
+    for (const path of filePaths) {
+      if (path) {
+        const absolutePath = join(process.cwd(), path);
+
+        try {
+          if (existsSync(absolutePath)) {
+            await unlink(absolutePath);
+            console.log(`Successfully deleted file: ${absolutePath}`);
+          }
+        } catch (err) {
+          console.error(
+            `Failed to delete file at ${absolutePath}:`,
+            err.message,
+          );
+        }
+      }
+    }
+
+    await this.customerRepository.remove(customer);
+
+    return {
+      message: 'Customer and associated documents deleted successfully',
+    };
   }
 }

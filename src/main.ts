@@ -13,10 +13,11 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       'http://88.222.241.87',
-	'https://88.222.241.87'      // Replace with your actual VPS IP
+      'https://88.222.241.87',
+      'http://localhost:5173', 
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,           // Required if you use cookies or Authorization headers
+    credentials: true,
   });
 
   app.useGlobalPipes(
@@ -27,7 +28,7 @@ async function bootstrap() {
       stopAtFirstError: true,
     }),
   );
-  
+
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.useStaticAssets(join(__dirname, '..', 'uploads'), {
