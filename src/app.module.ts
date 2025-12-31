@@ -16,18 +16,6 @@ import { TransactionsModule } from './transactions/transactions.module';
       isGlobal: true,
     }),
 
-    // TypeOrmModule.forRoot({
-    //   type: 'mysql',
-    //   host: '127.0.0.1',
-    //   port: 3306,
-    //   username: 'mksk_user',
-    //   password: 'StrongPassword123!',
-    //   database: 'mksk',
-    //   autoLoadEntities: true,
-    //   entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    //   synchronize: false,
-    // }),
-
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
